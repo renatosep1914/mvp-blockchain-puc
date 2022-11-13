@@ -26,14 +26,13 @@ describe('Blockchain', () => {
     it('validates a valid chain', () => {
         bc2.addBlock('500U$');
 
-        expect(bc.isValidChain(bc2.chain)).toBe(false);
+        expect(bc.isValidChain(bc2.chain)).toBe(true);
 
     });
 
     it('invalidates a chain with a corrupt genesis block', () => {
         
         bc2.chain[0].data = '0U$';
-
         expect(bc.isValidChain(bc2.chain)).toBe(false);
 
     });
@@ -51,9 +50,8 @@ describe('Blockchain', () => {
        
         bc2.addBlock('600U$');
         bc.replaceChain(bc2.chain);
-
-        //to do
-        //expect(bc.chain).toEqual(bc2.chain);
+        
+        expect(bc.chain).toEqual(bc2.chain);
     });
 
     it('does not replace the chain with one of less or equal length', () => {        

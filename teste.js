@@ -1,4 +1,4 @@
-const Block = require('./block.js');
+const Block = require('./blockchain/block');
 
 const block = new Block('7657', '7as7a7ASAS', '33354568HHH','100' );
 console.log(block.toString());
