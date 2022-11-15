@@ -5,7 +5,7 @@ class Wallet{
     constructor(){
         this.balance = INITIAL_BALANCE;
         this.keyPair = ChainUtil.genKeyPair();
-        this.publicKey = nthis.keyPair.getPublic().encode('hex');//em hexadecimal
+        this.publicKey = this.keyPair.getPublic().encode('hex');//em hexadecimal
     }
 
     toString(){
