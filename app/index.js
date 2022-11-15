@@ -13,10 +13,13 @@ app.use(express.json());
 app.get('/blocks', (req, res) => {
     res.json(bc.chain);
 });
+
 //endpoint mineradores
 app.post('/mine',(req, res) => {
     const block = bc.addBlock(req.body.data);
     console.log(`New Block added: ${block.toString()}`);
+
+    p2pServer.syncChain();
 
     res.redirect('/blocks');
 });
