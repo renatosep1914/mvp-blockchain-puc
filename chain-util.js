@@ -1,6 +1,8 @@
 const EC = require('elliptic').ec;
 const uuidV1 = require('uuid');
 const ec = new EC('secp256k1');//secp256k1 algoritmo de curva elíptica - "EC" se comporta como uma classe, por isso dessa instância
+const SHA256 = require('crypto-js/sha256');
+const { json } = require('express');
 
 class ChainUtil{
 
@@ -13,6 +15,14 @@ class ChainUtil{
         return uuidV1.v1;
     }
 
+    static hash(data){
+        return SHA256(JSON.stringify(data)).toString();
+    }
+
+    static verifySignature(publicKey, signature, dataHash){
+        return ec.keyFromPublic(publicKey, 'hex').verify(dataHash, signature);
+    }
+    
 }
 
 

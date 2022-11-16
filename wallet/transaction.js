@@ -9,6 +9,20 @@ class Transaction{
         this.outputs = [];
     }
 
+    update(senderWallet, recipient, amount) {
+        const senderOutput = this.outputs.find(output => output.adress==senderWallet.publicKey);
+        if (amount > senderOutput.amount){
+            console.log(`Amount: ${amount} exceeds the balance`);
+            return;
+        }
+
+        senderOutput.amount = senderOutput.amount - amount;
+        this.outputs.push({amount, adress: recipient});
+        Transaction.signTransaction(this, senderWallet);
+
+        return this;
+    }
+
     static newTransaction(senderWallet, recipient, amount){
 
         const transaction = new this();//criando instância da classe, dentro da classe
@@ -21,8 +35,30 @@ class Transaction{
 
         transaction.outputs.push(...[{amount: senderWallet.balance - amount, adress: senderWallet.publicKey}, 
                                     {amount, adress: recipient}])//;
+        
+        Transaction.signTransaction(transaction, senderWallet);
+                                    
         return transaction;
-    }    
+    }  
+    
+    static signTransaction(transaction, senderWallet){
+        transaction.input = {
+
+            timestamp: Date.now(),
+            amount: senderWallet.balance,
+            adress: senderWallet.publicKey,
+            signature: senderWallet.sign(ChainUtil.hash(transaction.outputs))
+        }
+    }
+
+    static verifyTransaction(transaction){
+        return ChainUtil.verifySignature(
+            transaction.input.adress,
+            transaction.input.signature,
+            ChainUtil.hash(transaction.outputs)
+        );
+    }
+
 }
 
 
